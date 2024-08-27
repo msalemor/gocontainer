@@ -2,7 +2,7 @@
 default:
 	@echo "type an action to perform"
 
-VERSION=v0.0.1
+VERSION=v0.0.2
 .PHONY: tag
 tag:
 	cd pkg && sed -i 's/v[0-9]*\.[0-9]*\.[0-9]*/$(VERSION)/g' ver.go
