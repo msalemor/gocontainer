@@ -1,16 +1,3 @@
-# gotainer
-
-A very simple GO singleton container services container.
-
-## Getting the package
-
-Get the package:
-
-`go get -u github.com/msalemor/gocontainer"
-
-## Using the package
-
-```go
 package main
 
 import (
@@ -47,4 +34,3 @@ func main() {
 	var webService = container.Get("web").(demo.APIServer)
 	webService.Serve()
 }
-```
