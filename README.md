@@ -1,6 +1,6 @@
-# gotainer
+# gocontainer
 
-A very simple GO singleton container services container.
+A very simple GO singleton container.
 
 ## Getting the package
 
@@ -8,7 +8,42 @@ Get the package:
 
 `go get -u github.com/msalemor/gocontainer"
 
-## Using the package
+## Package usage
+
+### Define a service
+
+```go
+package demo
+
+import (
+	"encoding/json"
+	"log"
+	"net/http"
+
+	"github.com/msalemor/gocontainer/pkg"
+	"github.com/sirupsen/logrus"
+)
+
+type APIServer interface {
+	Serve()
+}
+
+type Server struct {
+	Container *pkg.Container
+}
+
+func helloHandler(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(map[string]string{"message": "Hello, World!"})
+}
+
+func (s *Server) Serve() {
+	http.HandleFunc("/api/hello", helloHandler)
+	log.Println("Server started on port http://localhost:8180")
+	logrus.Info(http.ListenAndServe(":8180", nil))
+}
+```
+
+### Register and use the service in an application
 
 ```go
 package main
@@ -23,12 +58,6 @@ import (
 var container = pkg.AppContainer
 
 func initializeServices() {
-	var settings demo.ISettingService = &demo.Settings{}
-	container.Register("settings", settings)
-
-	var chatService demo.IChatService = &demo.ChatService{Container: container}
-	container.Register("chat", chatService)
-
 	var webService demo.APIServer = &demo.Server{Container: container}
 	container.Register("web", webService)
 }
@@ -38,12 +67,6 @@ func init() {
 }
 
 func main() {
-	var settingsService = container.Get("settings").(demo.ISettingService)
-	fmt.Println(settingsService.GetSettings())
-
-	var chatService = container.Get("chat").(demo.IChatService)
-	fmt.Println(chatService.GetResponse("Hello, World!"))
-
 	var webService = container.Get("web").(demo.APIServer)
 	webService.Serve()
 }
