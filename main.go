@@ -26,7 +26,7 @@ func init() {
 
 func main() {
 	var settingsService = container.Get("settings").(demo.ISettingService)
-	fmt.Println(settingsService.GetSettings())
+	fmt.Println(settingsService.GetSettings().Endpoint)
 
 	var chatService = container.Get("chat").(demo.IChatService)
 	fmt.Println(chatService.GetResponse("Hello, World!"))
